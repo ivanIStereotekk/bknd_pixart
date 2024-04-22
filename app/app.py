@@ -1,10 +1,15 @@
+from urllib.parse import urlparse
 from fastapi import Depends, FastAPI
 
+from settings import config
+import urllib
 from app.db import User, create_db_and_tables
 from app.schemas import UserCreate, UserRead, UserUpdate
 from app.users import auth_backend, current_active_user, fastapi_users
 
-app = FastAPI()
+
+contact_dict = dict(name=config['CONTACT_NAME'],email=config['CONTACT_EMAIL'],url=config['CONTACT_URL'])
+app = FastAPI(title=config['API_TITLE'],description=config['API_DESCRIPTION'],contact=contact_dict)
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
